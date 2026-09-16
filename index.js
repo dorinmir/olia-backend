@@ -13,7 +13,7 @@ const { Resend } = require('resend');
 const resend    = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
-app.use(cors({ origin: 'https://oliaborntomove.it' })); // <-- metti il tuo dominio
+app.use(cors({ origin: ['https://oliaborntomove.it', 'https://www.oliaborntomove.it'] }));
 app.use(express.json());
 
 // ── ENV richieste (.env) ──────────────────────
