@@ -70,7 +70,7 @@ app.post('/api/stripe/create-payment-intent', async (req, res) => {
 // ─────────────────────────────────────────────
 app.post('/api/stripe/webhook',
   express.raw({ type: 'application/json' }),
-  (req, res) => {
+  async (req, res) => {
     const sig = req.headers['stripe-signature'];
     let event;
     try {
