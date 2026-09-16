@@ -126,8 +126,8 @@ app.post('/api/paypal/create-order', async (req, res) => {
       }],
       application_context: {
         brand_name:  'OLIA Born to Move',
-        return_url:  'https://tuo-sito-olia.com/success',
-        cancel_url:  'https://tuo-sito-olia.com/cart',
+        return_url:  'https://oliaborntomove.it/success',
+        cancel_url:  'https://oliaborntomove.it/cart',
         user_action: 'PAY_NOW',
       }
     });
