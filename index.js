@@ -56,7 +56,13 @@ app.post('/api/stripe/create-payment-intent', async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount:   totalCents,
       currency: currency,
-      payment_method_types: ['card', 'klarna', 'paypal'],
+      // CORRETTO: 'klarna' richiede obbligatoriamente l'indirizzo di spedizione già in fase di
+      // creazione del PaymentIntent. Non raccogliendolo, la creazione falliva SEMPRE con un errore
+      // "Missing required param: shipping[...]", il che bloccava anche i pagamenti con carta
+      // (che usano questa stessa route). PayPal ha un flusso separato (create-order/capture-order)
+      // quindi non va qui. Se in futuro vuoi riattivare Klarna, va raccolto un indirizzo di
+      // spedizione reale nel checkout e passato come "shipping" qui sotto.
+      payment_method_types: ['card'],
       metadata: {
         items: JSON.stringify(items.map(i => ({ name: i.name, qty: i.qty, size: i.size }))),
       },
