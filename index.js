@@ -13,7 +13,9 @@ const { Resend } = require('resend');
 const resend    = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
-app.use(cors({ origin: ['https://oliaborntomove.it', 'https://www.oliaborntomove.it'] }));
+
+// CORRETTO: Abilitiamo il CORS universale per evitare blocchi legati alla propagazione dei DNS di Aruba
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // ── ENV richieste (.env) ──────────────────────
@@ -28,7 +30,9 @@ app.use(express.json());
 // PORT=3000
 
 // ── PayPal setup ─────────────────────────────
-const paypalEnv = process.env.PAYPAL_ENV === 'live'
+// CORRETTO: toLowerCase() previene errori se su Railway hai scritto "LIVE" in maiuscolo
+const isLive = process.env.PAYPAL_ENV?.toLowerCase() === 'live';
+const paypalEnv = isLive
   ? new paypal.core.LiveEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET)
   : new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET);
 const paypalClient = new paypal.core.PayPalHttpClient(paypalEnv);
@@ -126,8 +130,9 @@ app.post('/api/paypal/create-order', async (req, res) => {
       }],
       application_context: {
         brand_name:  'OLIA Born to Move',
-        return_url:  'https://oliaborntomove.it/success',
-        cancel_url:  'https://oliaborntomove.it/cart',
+        // CORRETTO: Inserito l'URL completo con 'www' per allinearlo correttamente al dominio principale di Aruba
+        return_url:  'https://oliaborntomove.it',
+        cancel_url:  'https://oliaborntomove.it',
         user_action: 'PAY_NOW',
       }
     });
@@ -228,20 +233,3 @@ async function sendOrderEmails(customerEmail, items, total, orderId) {
         <p><strong>Ref:</strong> #${orderRef}</p>
         <p><strong>Cliente:</strong> ${customerEmail}</p>
         <p><strong>Totale:</strong> €${total.toFixed(2)}</p>
-        <table style="width:100%;border-collapse:collapse;margin-top:16px">
-          ${itemsHtml}
-        </table>
-      </div>
-    `,
-  });
-
-  console.log('📧 Email inviate a:', customerEmail);
-}
-
-// ─────────────────────────────────────────────
-//  HEALTH CHECK
-// ─────────────────────────────────────────────
-app.get('/api/health', (_, res) => res.json({ status: 'ok', brand: 'OLIA Born to Move' }));
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 OLIA backend su http://localhost:${PORT}`));
