@@ -130,7 +130,6 @@ app.post('/api/paypal/create-order', async (req, res) => {
       }],
       application_context: {
         brand_name:  'OLIA Born to Move',
-        // CORRETTO: Inserito l'URL completo con 'www' per allinearlo correttamente al dominio principale di Aruba
         return_url:  'https://oliaborntomove.it',
         cancel_url:  'https://oliaborntomove.it',
         user_action: 'PAY_NOW',
@@ -233,3 +232,13 @@ async function sendOrderEmails(customerEmail, items, total, orderId) {
         <p><strong>Ref:</strong> #${orderRef}</p>
         <p><strong>Cliente:</strong> ${customerEmail}</p>
         <p><strong>Totale:</strong> €${total.toFixed(2)}</p>
+        <table style="width:100%;border-collapse:collapse;margin-top:16px">
+          ${itemsHtml}
+        </table>
+      </div>
+    `,
+  });
+
+  console.log('📧 Email inviate a:', customerEmail);
+}
+
