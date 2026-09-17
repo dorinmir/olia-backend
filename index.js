@@ -15,7 +15,7 @@ const resend    = new Resend(process.env.RESEND_API_KEY);
 const app = express();
 
 // CORRETTO: Abilitiamo il CORS universale per evitare blocchi legati alla propagazione dei DNS di Aruba
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: ['https://oliaborntomove.it', 'https://www.oliaborntomove.it'] }));
 app.use(express.json());
 
 // ── ENV richieste (.env) ──────────────────────
