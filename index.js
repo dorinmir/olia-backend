@@ -241,4 +241,7 @@ async function sendOrderEmails(customerEmail, items, total, orderId) {
 
   console.log('📧 Email inviate a:', customerEmail);
 }
-
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server avviato sulla porta ${PORT}`);
+});
