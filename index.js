@@ -17,6 +17,9 @@ const app = express();
 // CORRETTO: Abilitiamo il CORS universale per evitare blocchi legati alla propagazione dei DNS di Aruba
 app.use(cors({ origin: ['https://oliaborntomove.it', 'https://www.oliaborntomove.it'] }));
 app.use(express.json());
+const path = require('path');
+app.use(express.static(path.join(__dirname, '.')));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 // ── ENV richieste (.env) ──────────────────────
 // STRIPE_SECRET_KEY=sk_live_...
